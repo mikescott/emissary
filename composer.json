@@ -10,6 +10,11 @@
             "homepage": "https://github.com/mikescott/"
         }
     ],
+	"require": {
+        "php": ">=5.5.0",
+        "slim/slim": ">=3.0",
+        "illuminate/support": ">=5.1"
+    },
     "autoload": {
         "psr-0" : {
             "mikescott\\Emissary" : "src"
