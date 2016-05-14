@@ -16,6 +16,11 @@ class Emissary extends Container {
         $this->bootProviders();
     }
 
+    public function getApp()
+    {
+        return $this->app;
+    }
+
     /**
      * Boots all of the service providers
      */

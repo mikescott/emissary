@@ -11,7 +11,7 @@ class Middleware {
     public function __invoke($request, $response, $next)
     {
         $emissary = new Emissary($next);
-        $emissary->addProviders($this->providers);
+        $emissary->addProviders(array_merge(['mikescott\Emissary\ConfigServiceProvider'], $this->providers));
         return $next($request, $response);
     }
 }
