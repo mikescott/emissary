@@ -68,7 +68,7 @@ $app->run();
 When you run the app, "Hello, world!" should be output from the Example service.
 
 # A working example with Illuminate/Database
-```
+```php
 <?php
 require 'vendor/autoload.php';
 
