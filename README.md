@@ -1,5 +1,5 @@
 # Emissary
-Allows you to easily use Laravel Service Providers with Slim 3's DI container. Emissary is inspired by [itsgoingd/slim-services](https://github.com/itsgoingd/slim-services) and is compatible with Slim 3.
+Allows you to easily use Laravel Service Providers with Slim 3's DI container, as well as the associated facades. Emissary is inspired by [itsgoingd/slim-services](https://github.com/itsgoingd/slim-services) and is compatible with Slim 3.
 
 This is very much a work in progress so use at your own risk.
 
@@ -11,7 +11,62 @@ Installation is via [Composer](https://getcomposer.org/):
 $ composer require mikescott/emissary "1.*"
 ```
 
-## Basic Usage
+# A working example with Illuminate/Database
+```php
+<?php
+require 'vendor/autoload.php';
+
+use Slim\App;
+use Slim\Container;
+
+$config = [
+    'settings' => [
+        'database.fetch' => PDO::FETCH_CLASS,
+        'database.default' => 'mysql',
+        'database.connections' => [
+            'mysql' => [
+                'driver' => 'mysql',
+                'host' => 'mysql',
+                'port' => 3306,
+                'database' => '',
+                'username' => '',
+                'password' => '',
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+                'prefix' => '',
+                'strict' => false,
+                'engine' => null,
+            ],
+        ]
+    ]
+];
+
+$providers = [
+    'Illuminate\Database\DatabaseServiceProvider'
+];
+
+$aliases = [
+    'DB' => 'Illuminate\Support\Facades\DB'
+];
+
+$app = new App(new Container($config));
+
+$app->add(new \mikescott\Emissary\Middleware($providers, $aliases));
+
+$app->get('/', function ($request, $response, $args) {
+    # Illuminate/Database via facade
+    $tables = DB::select('SHOW TABLES');
+    var_dump($tables);
+
+    # or via the container:
+    $tables = $this->get('db')->select('SHOW TABLES');
+    var_dump($tables);
+});
+
+$app->run();
+```
+
+## Custom Service Provider
 
 ### Example.php
 ```
@@ -66,50 +121,6 @@ $app->run();
 ```
 
 When you run the app, "Hello, world!" should be output from the Example service.
-
-# A working example with Illuminate/Database
-```php
-<?php
-require 'vendor/autoload.php';
-
-use Slim\App;
-use Slim\Container;
-
-$config = [
-    'settings' => [
-        'database.fetch' => PDO::FETCH_CLASS,
-        'database.default' => 'mysql',
-        'database.connections' => [
-            'mysql' => [
-                'driver' => 'mysql',
-                'host' => 'mysql',
-                'port' => 3306,
-                'database' => '',
-                'username' => '',
-                'password' => '',
-                'charset' => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix' => '',
-                'strict' => false,
-                'engine' => null,
-            ],
-        ]
-    ]
-];
-
-$app = new App(new Container($config));
-
-$app->add(new \mikescott\Emissary\Middleware([
-    'Illuminate\Database\DatabaseServiceProvider'
-]));
-
-$app->get('/', function ($request, $response, $args) {
-    $tables = $this->get('db')->select('SHOW TABLES');
-    var_dump($tables);
-});
-
-$app->run();
-```
 
 # License
 The MIT License (MIT)

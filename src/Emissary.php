@@ -43,6 +43,13 @@ class Emissary extends Container {
             $this->providers[] = $p;
         }
     }
+    
+    public function addAliases(array $aliases)
+    {
+        foreach($aliases as $alias => $original) {
+            class_alias($original, $alias);
+        }
+    }
 
     /**
      * Binds all of the service providers to both the Illuminate container and Slim's container
