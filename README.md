@@ -51,7 +51,7 @@ $aliases = [
 
 $app = new App(new Container($config));
 
-$app->add(new \mikescott\Emissary\Middleware($providers, $aliases));
+$app->add(new \mikescott\Emissary\Middleware($app, $providers, $aliases));
 
 $app->get('/', function ($request, $response, $args) {
     # Illuminate/Database via facade
@@ -108,7 +108,7 @@ use Slim\Container;
 
 $app = new App(new Container());
 
-$app->add(new \mikescott\Emissary\Middleware([
+$app->add(new \mikescott\Emissary\Middleware($app, [
     'foo\Example\ServiceProvider'
 ]));
 
